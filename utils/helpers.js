@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-import rp from 'request-promise';
-import nodemailer from 'nodemailer';
 
 function sendResetPasswordEmail(num, email, name, callback) {
     var transporter = nodemailer.createTransport({

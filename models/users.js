@@ -15,7 +15,6 @@ const usersSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        unique: true,
         required: [true, "Username is required"], 
     },
     password: {
@@ -25,12 +24,9 @@ const usersSchema = new mongoose.Schema({
     },
     dateofbirth: {
         type: Date,
-        required: true,
     },
     email: {
         type: String,
-        unique: true,
-        required: [true, "Email is required"],
     },
     provider_name: {
         type: String,
@@ -39,6 +35,13 @@ const usersSchema = new mongoose.Schema({
     provider_id: {
         type: String,
         required: false
+    },
+    verificationToken: {
+        type: String,
+        expires: '60',
+    },
+    role:{
+        type: String
     }
 });
 export default mongoose.model('users',usersSchema);

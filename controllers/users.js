@@ -4,6 +4,8 @@ import helper from '../utils/helpers.js';
 import SimpleSchema from 'simpl-schema';
 import User from '../models/users.js'; 
 import Role from '../models/roles.js';
+import Membership from '../models/membership.js';
+import Bar from '../models/bar.js';
 
 const home = (req, res) => {
     res.send('Hello From Home');
@@ -12,7 +14,7 @@ const home = (req, res) => {
 const register = async (req, res) => {
     
     try {
-
+        
         let role = req.body.role;
         let result = await Role.findOne({name: role});
         if(!result){
@@ -23,7 +25,7 @@ const register = async (req, res) => {
             })
         }
         req.body.role = result._id;
-
+        
         let body = req.body;
         let userSchema = new SimpleSchema({
             username: {type: String , required: false},
@@ -178,8 +180,124 @@ const login = async (req, res) => {
     }
 }
 
+const selectMembership = async (req,res) =>{
+    try {
+        let userId = req.user._id;
+        let result = await User.findByIdAndUpdate({userId} , {$set:{membership:req.body.membership}});
+        return res.status(200).json({
+            status: "success",
+            message: "Membership assigned to User Successfully",
+            data: result
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            message: "An unexpected error occurred while proceeding your request.",
+            data: null,
+            trace: error.message
+        })
+    }
+}
+
+const cardDetail = async (req,res) =>{
+    try {
+        let userId = req.user._id;
+        let { cardHolderName,cardNumber,exp_month,exp_year,CVCNumber,customerId,cardType } = req.body;
+        let result = await User.findByIdAndUpdate({_id : userId} , {$set : {cardDetail : req.body}} , {new: true});
+        return res.status(200).json({
+            status: "success",
+            message: "Card Details Saved",
+            data: result
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message : "error",
+            data: error.message
+        })
+    }
+}
+
+const barProfile = async (req,res) =>{
+    try {
+        let userId = req.user._id;
+        let result = await User.findById({userId});
+        
+        if(result.role == 'barowner'){
+            if(req.files)
+            {
+                let logo = req.files.upload_logo;
+                
+                let fileName = `public/profiles/${Date.now()}-${logo.name.replace(/ /g, '-').toLowerCase()}`;
+                await logo.mv(fileName);
+                
+                logo = fileName.replace("public", "");
+                req.body.upload_logo = fileName;
+                logo = fileName.replace("public", "");
+                req.body.upload_logo = logo;
+
+                let coverPhoto = req.files.upload_coverPhoto;
+                
+                fileName = `public/profiles/${Date.now()}-${coverPhoto.name.replace(/ /g, '-').toLowerCase()}`;
+                await coverPhoto.mv(fileName);
+                
+                coverPhoto = fileName.replace("public", "");
+                req.body.upload_coverPhoto = fileName;
+                coverPhoto = fileName.replace("public", "");
+                req.body.upload_coverPhoto = coverPhoto;
+
+            }
+            let barInfo = await Bar.create(req.body);
+            await User.findByIdAndUpdate({userId} , {$set: {barInfo: barInfo._id}});
+            return res.status(200).json({
+                status: "success",
+                message: "Bar Info Updated",
+                data: result
+            })
+        }
+    } catch (error) {
+        
+    }
+}
+
+const barInfo = async (req,res) =>{
+    try {
+        let userId = req.user._id;
+        let result = await User.findById({userId});
+        
+        if(result.role == 'barowner'){
+            if(req.files)
+            {
+                let doc = req.files.upload_document;
+                
+                let fileName = `public/profiles/${Date.now()}-${doc.name.replace(/ /g, '-').toLowerCase()}`;
+                await doc.mv(fileName);
+                
+                doc = fileName.replace("public", "");
+                req.body.upload_document = fileName;
+                doc = fileName.replace("public", "");
+                req.body.upload_document = doc;
+            }
+            let barInfo = await Bar.create(req.body);
+            return res.status(200).json({
+                status: "success",
+                message: "Bar Info Updated",
+                data: result
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message : "error",
+            data: error.message
+        })
+    }
+}
+
 export default{
     home,
     register,
-    login
+    login,
+    selectMembership,
+    cardDetail,
+    barProfile,
+    barInfo
 };

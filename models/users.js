@@ -42,6 +42,18 @@ const usersSchema = new mongoose.Schema({
     },
     role:{
         type: String
-    }
+    },
+    membership:{
+        type: String
+    },
+    cardDetail:[{
+        cardHolderName : {type: String},
+        cardNumber : {type: Number,min: 12},
+        exp_month : {type: String},
+        exp_year : {type: String},
+        CVCNumber : {type: Number, min:3},
+        customerId : {type:String},
+        cardType: {type: String}
+    }]
 });
 export default mongoose.model('users',usersSchema);

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import users from "./routes/users.js";
 import mongoose from "mongoose";
 import roles from "./routes/role.js";
+import membership from './routes/membership.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/api/users", users);
 app.use("/api/roles", roles);
+app.use("/api/membership", membership);
 
 app.get("/", (req, res) => res.send("Welcome to the Users API!"));
 app.all("*", (req, res) => res.status(404).send("You've tried reaching a route that doesn't exist."));

@@ -1,22 +1,6 @@
 import jwt from 'jsonwebtoken';
-
-function sendResetPasswordEmail(num, email, name, callback) {
-    var transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        auth: {
-            user: process.env.MAIL_USERNAME,
-            pass: process.env.MAIL_PASSWORD,
-        },
-    });
-    var mailOptions = {
-        from: process.env.MAIL_USERNAME,
-        to: email,
-        subject: "Code for reset password",
-        html: " Hi <strong>" + `${name}` + "</strong> <br /><br /> Your verification code is <strong>" + `${num}` + "</strong>. <br /> Enter this code in our app to reset your password.",
-    };
-    return transporter.sendMail(mailOptions, callback)
-}
+import nodemailer from "nodemailer";
+import User from '../models/users.js';
 
 function validateUsername(username) {
     /* 
@@ -43,9 +27,81 @@ function verifyToken(req, res, next) {
         req.token = bearerToken[1];
         next();
     } else {
-        res.status(401).json({ message: "please Insert Jwt" });
+        res.status(401).json({ message: "Please use a sign-in token to access this request.", data: null });
     }
 }
+
+async function verifyAdminAuthToken(req, res, next) {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== "undefined") {
+        req.token = bearerHeader.split(" ")[1];
+
+        // Validating Token
+        let invalidToken = false;
+        jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
+            if (err) {
+                invalidToken = true;
+                return res.status(401).json({ status: "error", message: "Malformed sign-in token! Please use a valid sign-in token to continue.", data: null });
+            }
+        });
+        if (invalidToken) return;
+
+        // Checking and Adding user to req object.
+        req.user = await admin.findOne({ verificationToken: req.token }).lean();
+        if (!req.user) return res.status(404).json({
+            status: "error",
+            message: "Invalid sign-in token! Please log-in again to continue.",
+            data: null
+        });
+        // req.user.preferences = await preferredTags(req.user._id);
+        // req.user.followedChannels = await followedChannels(req.user._id);
+        next();
+    } else {
+        return res.status(401).json({ status: "error", message: "Please use a sign-in token to access this request.", data: null });
+    }
+}
+
+async function verifyAuthToken(req, res, next) {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== "undefined") {
+        req.token = bearerHeader.split(" ")[1];
+
+        // Validating Token
+        let invalidToken = false;
+        jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
+            if (err) {
+                invalidToken = true;
+                return res.status(401).json({ status: "error", message: "Malformed sign-in token! Please use a valid sign-in token to continue.", data: null });
+            }
+        });
+        if (invalidToken) return;
+
+        // Checking and Adding user to req object.
+        req.user = await User.findOne({ verificationToken: req.token }).lean();
+        if (!req.user) return res.status(403).json({
+            status: "error",
+            message: "Invalid sign-in token! Please log-in again to continue.",
+            data: null
+        });
+        // req.user.preferences = await preferredTags(req.user._id);
+        // req.user.followedChannels = await followedChannels(req.user._id);
+        next();
+    } else {
+        return res.status(401).json({ status: "error", message: "Please use a sign-in token to access this request.", data: null });
+    }
+}
+
+// async function preferredTags(userid) {
+//     if (!userid) throw new Error(`Expected a userid but got ${typeof userid}`);
+//     const views = await Views.find({ userid }, { userid: 0, videoId: 0, created: 0, _id: 0 }).lean();
+//     return Array.from(new Set(_.pluck(views, 'videoTags').flat(1)));
+// }
+
+// async function followedChannels(userid) {
+//     if (!userid) throw new Error(`Expected a userid but got ${typeof userid}`);
+//     const followedChannels = await Follows.find({ userid }, { _id: 0, userid: 0, created: 0 }).lean();
+//     return Array.from(new Set(_.pluck(followedChannels, 'following')));
+// }
 
 function regexSearch(query) {
     let search = '.*' + query + '.*';
@@ -71,6 +127,15 @@ function distance(lat1, lon1, lat2, lon2, unit) {
     return dist
 }
 
+function sort(arr, property, sortType) {
+    if (!Array.isArray(arr)) throw new Error(`Expected array in arr but got ${typeof arr}`);
+    if (typeof property !== "string") throw new Error(`Expected string in property but got ${typeof property}`);
+    if (typeof sortType !== "number") throw new Error(`Expected number in sortType but got ${typeof sortType}`);
+    let result = _.sortBy(arr, property);
+    if (sortType < 0) result = result.reverse();
+    return result;
+}
+
 function filterCoordinates(poslat, poslng, range_in_meter, data) {
     var cord = [];
     for (var i = 0; i < data.length; i++) {
@@ -81,56 +146,126 @@ function filterCoordinates(poslat, poslng, range_in_meter, data) {
     return cord;
 }
 
-function generateZoomJWT(APIKEY, APISECRET) {
-    const payload = {
-        iss: APIKEY,
-        exp: ((new Date()).getTime() + 5000)
+function sendResetPasswordEmail(num, email, name, callback) {
+    var transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        auth: {
+            user: process.env.MAIL_USERNAME,
+            pass: process.env.MAIL_PASSWORD,
+        },
+    });
+    var mailOptions = {
+        from: process.env.MAIL_USERNAME,
+        to: email,
+        subject: "Code for reset password",
+        html: " Hi <strong>" + `${name}` + "</strong> <br /><br /> Your verification code is <strong>" + `${num}` + "</strong>. <br /> Enter this code in our app to reset your password.",
     };
-    return jwt.sign(payload, APISECRET);
+    return transporter.sendMail(mailOptions, callback)
 }
 
-/**
- * 
- * @param {string} email pass the developer account's email address
- * @param {string} token pass the jwt token, You can generate token APIKey and API Secret.
- * @param {string} topic pass the topic/agenda of meeting 
- * @returns 
- */
-function createZoomMeeting(email, token, topic) {
-    var options = {
-        method: "POST",
-        uri: "https://api.zoom.us/v2/users/" + email + "/meetings",
-        body: {
-            topic,
-            type: 1,
-            settings: {
-                host_video: "true",
-                participant_video: "true",
-                private_meeting: "true",
-                waiting_room: "true",
-                show_share_button: "true"
-            }
+function notificationHelper(fcmToken, title, body, data, payloadData, daterId) {
+    var fcm = new FCM(process.env.FCM_KEY);
+    var message = {
+        to: fcmToken,
+        collapse_key: 'your_collapse_key',
+
+        notification: {
+            title: title,
+            body: body
         },
-        auth: {
-            bearer: token
-        },
-        headers: {
-            "User-Agent": "Zoom-api-Jwt-Request",
-            "content-type": "application/json"
-        },
-        json: true
+        data: data
     };
 
-    return rp(options);
+    notifications.create({
+        daterId: daterId,
+        title: title,
+        body: body,
+        data: payloadData,
+        readStatus: 0
+    });
+
+    fcm.send(message, function (err, response) {
+        if (err) {
+            console.log("Something has gone wrong!");
+        } else {
+            console.log("Successfully sent with response: ", response);
+        }
+    });
+}
+
+function paginate(records, page = 1, limit = 10) {
+    page = isNaN(parseInt(page)) ? 1 : parseInt(page),
+        limit = isNaN(parseInt(limit)) ? 1 : parseInt(limit);
+
+    const results = {};
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    if (endIndex < records.length) {
+        results.next = {
+            page: page + 1,
+            limit: limit
+        }
+    }
+    if (startIndex > 0) {
+        results.previous = {
+            page: page - 1,
+            limit: limit
+        }
+    }
+    results.totalPages = {
+        page: Math.ceil(records.length / limit),
+        limit: limit,
+        totalRecords: records.length
+    };
+
+    results.result = records.slice(startIndex, endIndex);
+    return results;
+}
+
+async function showMacroMonitor(userid) {
+    try {
+        const user = await User.findById(userid).lean();
+        const ateFood = await Food.find({ userid, createdAt: { $gte: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString() } }).lean();
+        let fats = 0, proteins = 0, carbs = 0, calories = 0, water = 0;
+        ateFood.forEach(foodList => {
+            foodList.foodItems.forEach(foodItem => {
+                if (foodItem.type !== "Water") {
+                    fats += foodItem.fat;
+                    proteins += foodItem.protein;
+                    carbs += foodItem.carbs;
+                    calories += foodItem.calories;
+                }
+                else {
+                    water++;
+                }
+            })
+        });
+
+        return {
+            fats,
+            proteins,
+            carbs,
+            calories,
+            water,
+            caloriesGoal: user.caloriesGoal
+        }
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export default {
-    sendResetPasswordEmail,
     validateUsername,
     validateEmail,
     verifyToken,
+    verifyAuthToken,
     regexSearch,
     filterCoordinates,
-    generateZoomJWT,
-    createZoomMeeting
+    sendResetPasswordEmail,
+    notificationHelper,
+    paginate,
+    sort,
+    showMacroMonitor,
+    verifyAdminAuthToken
 }

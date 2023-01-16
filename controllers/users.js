@@ -16,6 +16,7 @@ const register = async (req, res) => {
     try {
         
         let role = req.body.role;
+
         let result = await Role.findOne({name: role});
         if(!result){
             return res.status(404).json({
@@ -255,7 +256,10 @@ const barProfile = async (req,res) =>{
             })
         }
     } catch (error) {
-        
+        return res.status(500).json({
+            message : "error",
+            data: error.message
+        })
     }
 }
 

@@ -54,6 +54,9 @@ const usersSchema = new mongoose.Schema({
         CVCNumber : {type: Number, min:3},
         customerId : {type:String},
         cardType: {type: String}
-    }]
+    }],
+    barInfo:{
+        type: String
+    }
 });
 export default mongoose.model('users',usersSchema);

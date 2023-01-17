@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from 'dotenv';
 import users from "./routes/users.js";
+import menu from "./routes/menu.js";
+import membership from "./routes/membership.js";
 import mongoose from "mongoose";
 import roles from "./routes/role.js";
-import membership from './routes/membership.js';
-import menu from "./routes/menu.js";
+import fileUpload from "express-fileupload";
 
-mongoose.set('strictQuery', false);
 
 dotenv.config();
 
@@ -21,14 +21,12 @@ mongoose.connect(DB_URL, (err, db) => {
 
 const app = express();
 app.use(express.json());
-
-app.use(express.urlencoded({ extended: false }))
-app.use(express.static('public'));
+app.use(fileUpload());
 
 app.use("/api/users", users);
 app.use("/api/roles", roles);
+app.use("/api/menu" , menu);
 app.use("/api/membership", membership);
-app.use("/api/menu", menu);
 
 app.get("/", (req, res) => res.send("Welcome to the Users API!"));
 app.all("*", (req, res) => res.status(404).send("You've tried reaching a route that doesn't exist."));

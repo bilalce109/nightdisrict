@@ -59,4 +59,14 @@ const usersSchema = new mongoose.Schema({
         type: String
     }
 });
+
+
+usersSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+      delete ret.password;
+      delete ret.__v;
+      return ret;
+    }
+  });
+
 export default mongoose.model('users',usersSchema);

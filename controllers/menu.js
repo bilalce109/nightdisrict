@@ -6,9 +6,6 @@ import User from "../models/users.js";
 
 const createMenuCat = async (req,res) =>{
     try {
-        return res.json({
-            data: req.body
-        })
         
         let userId = req.user._id;
         let result = await User.findById(userId);

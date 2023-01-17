@@ -71,8 +71,16 @@ const register = async (req, res) => {
             fileName = fileName.replace("public", "");
             body.profile_picture = fileName;
         }
+
+        if(body.password !== body.confirm_password){
+            return res.json({
+                status: 400,
+                messsage: "Password not Matched"
+            })
+        }
         
         body.password = await bcrypt.hash(body.password, 10);
+        // body.confirm_password = await bcrypt.hash(body.confirm_password, 10);
         
         
         new User(body).save().then(inserted => {

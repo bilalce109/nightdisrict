@@ -1,0 +1,663 @@
+{
+	"info": {
+		"_postman_id": "887ae398-0e5e-4506-ade7-22f7de9c9daf",
+		"name": "Night District",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10073223"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Social Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"jose1\",\r\n    \"email\": \"jose1@gmail.com\",\r\n    \"username\": \"jose1\",\r\n    \"fcm\":\"fkfdkfkfkfdkfkg\",\r\n    \"provider_name\":\"facebook\",\r\n    \"provider_id\":\"10152368852405296\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/api/users/sociallogin",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"sociallogin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "mrsvlog",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "mrsvlog@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456789",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/users",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LOGIN User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"new\",\r\n    \"password\": \"123456789\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/users/login",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Forget Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"rick@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{live}}users/forgetPassword",
+									"host": [
+										"{{live}}users"
+									],
+									"path": [
+										"forgetPassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CHANGE Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"rick@gmail.com\",\r\n    \"password\": \"123456789\",\r\n    \"otpCode\": 997967\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{live}}users/changePassword",
+									"host": [
+										"{{live}}users"
+									],
+									"path": [
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "UPDATE Users",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/C:/Users/abdul.maroof/Desktop/Downtown/1.jfif"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/users",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CHANGE ProfilePicture",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNGY0MTBhNDFhNmM0NTdkZDJhMmY4NiIsInVzZXJuYW1lIjoiam9obl9wYXVsIiwiaWF0IjoxNjY2MjkyMTIzfQ.iZE77y_2R6WFy1ECk-Bthb6Izc3EaXOAs_XtW55zXbs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profilePicture",
+											"type": "file",
+											"src": [
+												"/C:/Users/abdul.maroof/Documents/GitHub/HaleyRomePreset/public/uploads/afterPath/90s-CALI.jpg",
+												"/C:/Users/abdul.maroof/Documents/GitHub/HaleyRomePreset/public/uploads/afterPath/90s-CALI-02.jpg"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{local}}/api/users/profilePicture",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"profilePicture"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CHECK Username",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/api/users/checkUsername/john_paul",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"checkUsername",
+										"john_paul"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pages",
+					"item": [
+						{
+							"name": "About Page",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\" : \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/users/about",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users",
+										"about"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View About",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjQwNGNjZDk1ZjJhZTVmZTczMmEyNyIsInVzZXJuYW1lIjoic2FtIiwiaWF0IjoxNjY5MTI4NzI2fQ.TovYdPwA05pCV8WImLjFN1JX60HSSp6aaoQbAfY5G64",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/users/viewAbout",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users",
+										"viewAbout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Terms Page",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\" : \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/users/term",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users",
+										"term"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "View Terms",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/users/viewTerm",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"users",
+										"viewTerm"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Role",
+					"item": [
+						{
+							"name": "Create Role",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Membership",
+					"item": [
+						{
+							"name": "Create Membership",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Select Membership",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Menu",
+					"item": [
+						{
+							"name": "Create Menu Category",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjQwNGNjZDk1ZjJhZTVmZTczMmEyNyIsInVzZXJuYW1lIjoic2FtIiwiaWF0IjoxNjY5MTk2Mzc0fQ.qcJCszKwwIcDfsCm1ntjQhgui5w4lV4k6s9IQHoGR9k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"1234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNzJjODFhZjlmY2QyZjI2ZDA5MmQ1OCIsInVzZXJuYW1lIjoiam9obiIsImlhdCI6MTY2ODUzMzgzNX0.j6xmBtRFjMUV2MmATlTPBpoV4vlTGzni2Yk6RB0mQQE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{live}}users",
+							"host": [
+								"{{live}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ProfilePicture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTVmZDZiZDk4ODQwYzNiZDk4ZDgyOCIsInVzZXJuYW1lIjoidG9tLmRvdWdsYXMiLCJpYXQiOjE2NDk4MDI3NTl9.bzTH5kekGZe7B4ZjpFBGMOh7sbxBMcStWI_V8KZNE0A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profilePicture",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/api/users/profilePicture",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profilePicture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provider Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/api/users/checkProviderId/fb_provider_id",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"checkProviderId",
+								"fb_provider_id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjQwNGU0ZDk1ZjJhZTVmZTczMmEyYiIsInVzZXJuYW1lIjoiZGFuIiwiaWF0IjoxNjY5MjExOTcyfQ.hiCBZLjrjw0odbVEsR-uTHeuF7j-gif2Lo018R4UJGQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/users/profile",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Based on Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNjQwNGU0ZDk1ZjJhZTVmZTczMmEyYiIsInVzZXJuYW1lIjoiZGFuIiwiaWF0IjoxNjY5MTk5NTQ0fQ.QQOlcPBTY0orZgozRdaIZRb5JJ44WgTu9vJ2e_cAf9k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/users/631128affcc77369ff1ce009",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								"631128affcc77369ff1ce009"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNzJjODFhZjlmY2QyZjI2ZDA5MmQ1OCIsInVzZXJuYW1lIjoiam9obiIsImlhdCI6MTY2ODcyNTE4N30.PW7MUJ0-eQEHVhuLo9a08GNhxjNSk8zjjFzZQlRQwaE",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Bar",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "localhost:3000/api",
+			"type": "string"
+		}
+	]
+}

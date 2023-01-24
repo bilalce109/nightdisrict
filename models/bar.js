@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 const bar = new mongoose.Schema({
-    logo:{
+    upload_logo:{
         type: String
     },
-    coverPhoto:{
+    upload_coverPhoto:{
         type: String
     },
     color:{
@@ -30,6 +30,28 @@ const bar = new mongoose.Schema({
     },
     upload_document:{
         type: String
+    },
+    barHours:[{
+        day: {type: String},
+        startTime: {type: String},
+        endTime: {type: String}
+    }],
+    barHashtag:[
+        {
+            type: String
+        }
+    ],
+    ownerAge:{
+        type: Number
+    },
+    drinkSize:{
+        type: Number
+    },
+    drinkShot:{
+        type: Number
+    },
+    rock_neat:{
+        type: Number
     }
 });
 export default mongoose.model('bar', bar);

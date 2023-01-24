@@ -5,7 +5,6 @@ import SimpleSchema from 'simpl-schema';
 import User from '../models/users.js'; 
 import Role from '../models/roles.js';
 import Membership from '../models/membership.js';
-import Bar from '../models/bar.js';
 
 const home = (req, res) => {
     res.send('Hello From Home');
@@ -84,7 +83,7 @@ const register = async (req, res) => {
         
         
         new User(body).save().then(inserted => {
-            inserted.verificationToken = jwt.sign({ id: inserted._id, username: inserted.username}, process.env.JWT_SECRET , {expiresIn : 3600});
+            inserted.verificationToken = jwt.sign({ id: inserted._id, username: inserted.username, role: inserted.role}, process.env.JWT_SECRET , {expiresIn : 3600});
             inserted.save();
             return res.json({
                 status: "success",
@@ -226,90 +225,10 @@ const cardDetail = async (req,res) =>{
     }
 }
 
-const barProfile = async (req,res) =>{
-    try {
-        let userId = req.user._id;
-        let result = await User.findById({userId});
-        
-        if(result.role == 'barowner'){
-            if(req.files)
-            {
-                let logo = req.files.upload_logo;
-                
-                let fileName = `public/profiles/${Date.now()}-${logo.name.replace(/ /g, '-').toLowerCase()}`;
-                await logo.mv(fileName);
-                
-                logo = fileName.replace("public", "");
-                req.body.upload_logo = fileName;
-                logo = fileName.replace("public", "");
-                req.body.upload_logo = logo;
-
-                let coverPhoto = req.files.upload_coverPhoto;
-                
-                fileName = `public/profiles/${Date.now()}-${coverPhoto.name.replace(/ /g, '-').toLowerCase()}`;
-                await coverPhoto.mv(fileName);
-                
-                coverPhoto = fileName.replace("public", "");
-                req.body.upload_coverPhoto = fileName;
-                coverPhoto = fileName.replace("public", "");
-                req.body.upload_coverPhoto = coverPhoto;
-
-            }
-            let barInfo = await Bar.create(req.body);
-            await User.findByIdAndUpdate({userId} , {$set: {barInfo: barInfo._id}});
-            return res.status(200).json({
-                status: "success",
-                message: "Bar Info Updated",
-                data: result
-            })
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message : "error",
-            data: error.message
-        })
-    }
-}
-
-const barInfo = async (req,res) =>{
-    try {
-        let userId = req.user._id;
-        let result = await User.findById({userId});
-        
-        if(result.role == 'barowner'){
-            if(req.files)
-            {
-                let doc = req.files.upload_document;
-                
-                let fileName = `public/profiles/${Date.now()}-${doc.name.replace(/ /g, '-').toLowerCase()}`;
-                await doc.mv(fileName);
-                
-                doc = fileName.replace("public", "");
-                req.body.upload_document = fileName;
-                doc = fileName.replace("public", "");
-                req.body.upload_document = doc;
-            }
-            let barInfo = await Bar.create(req.body);
-            return res.status(200).json({
-                status: "success",
-                message: "Bar Info Updated",
-                data: result
-            })
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message : "error",
-            data: error.message
-        })
-    }
-}
-
 export default{
     home,
     register,
     login,
     selectMembership,
-    cardDetail,
-    barProfile,
-    barInfo
+    cardDetail
 };

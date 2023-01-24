@@ -8,7 +8,5 @@ router.post('/', userController.register);
 router.post('/login', userController.login);
 router.post('/selectMembership' ,  helper.verifyAuthToken, userController.selectMembership);
 router.put("/cardDetail" ,helper.verifyAuthToken, userController.cardDetail);
-router.put("/barProfile" ,helper.verifyAuthToken, userController.barProfile);
-router.put("/barInfo" ,helper.verifyAuthToken, userController.barInfo);
 
 export default router;

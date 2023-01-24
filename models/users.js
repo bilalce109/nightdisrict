@@ -55,6 +55,10 @@ const usersSchema = new mongoose.Schema({
         customerId : {type:String},
         cardType: {type: String}
     }],
+    paymentStatus:{
+        type: String,
+        default: "Paid"
+    },
     barInfo:{
         type: String
     }
